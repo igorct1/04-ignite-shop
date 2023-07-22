@@ -3,7 +3,7 @@ import { vars } from '../global.css'
 
 export const homeContainer = style({
   display: 'flex',
-  gap: '3rem',
+
   maxWidth: 'calc(100vw - ((100vw - 1180px) / 2) )',
   width: '100%',
   marginLeft: 'auto',
