@@ -9,7 +9,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <Image src={logo} alt="logo" />
+        <a href="/">
+          <Image src={logo} alt="logo" />
+        </a>
       </header>
       <Component {...pageProps} />
     </div>
