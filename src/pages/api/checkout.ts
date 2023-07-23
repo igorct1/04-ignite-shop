@@ -5,7 +5,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const priceId = 'price_1MZ2VmHqQEeXa6dat2dMXBAr'
+  const { priceId } = req.body
+
+  //   enviar mensagem caso o method seja diferente de post
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  //   enviar mensagem caso a rota seja chamada sem o priceId
+  if (!priceId) {
+    return res.status(400).json({ error: 'Price not found' })
+  }
 
   const successUrl = `${process.env.NEXT_URL}/success`
   const cancelUrl = `${process.env.NEXT_URL}/`

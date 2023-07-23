@@ -13,6 +13,7 @@
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "@vanilla-extract/css": "^1.12.0",
+    "axios": "^1.4.0",
     "eslint-config-next": "13.4.10",
     "keen-slider": "^6.8.6",
     "next": "13.4.10",

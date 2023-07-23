@@ -63,8 +63,12 @@ export const button = style({
   fontSize: vars.fontSizes.md,
 
   selectors: {
-    '&:hover': {
+    '&:not(:disabled):hover': {
       backgroundColor: vars.colors.green300,
+    },
+    '&:disabled': {
+      opacity: 0.6,
+      cursor: 'not-allowed',
     },
   },
 })
