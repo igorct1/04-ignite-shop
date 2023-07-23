@@ -35,6 +35,16 @@ export default function Success({ customerName, product }: SuccessProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  // redirecionar usuario para a home o usuario tente acessar o /success sem o parametro de session_id
+  if (!query.session_id) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
   const sessionId = String(query.session_id)
 
   const session = await stripe.checkout.sessions.retrieve(sessionId, {
