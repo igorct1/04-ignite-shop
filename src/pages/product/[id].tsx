@@ -6,6 +6,7 @@ import Image from 'next/image'
 import * as styles from '../../styles/pages/product.css'
 import axios from 'axios'
 import { useState } from 'react'
+import Head from 'next/head'
 
 interface ProductProps {
   product: {
@@ -37,25 +38,30 @@ export default function Product({ product }: ProductProps) {
   }
 
   return (
-    <main className={styles.productContainer}>
-      <div className={styles.imageContainer}>
-        <Image src={product.imageUrl} width={520} height={480} alt="" />
-      </div>
-      <div className={styles.productDetails}>
-        <h1 className={styles.title}>{product.name}</h1>
-        <span className={styles.price}>{product.price}</span>
+    <>
+      <Head>
+        <title>{product.name} | Ignite Shop</title>
+      </Head>
+      <main className={styles.productContainer}>
+        <div className={styles.imageContainer}>
+          <Image src={product.imageUrl} width={520} height={480} alt="" />
+        </div>
+        <div className={styles.productDetails}>
+          <h1 className={styles.title}>{product.name}</h1>
+          <span className={styles.price}>{product.price}</span>
 
-        <p className={styles.paragraph}>{product.description}</p>
+          <p className={styles.paragraph}>{product.description}</p>
 
-        <button
-          disabled={isCreatingCheckoutSession}
-          className={styles.button}
-          onClick={handleBuyProduct}
-        >
-          Comprar agora
-        </button>
-      </div>
-    </main>
+          <button
+            disabled={isCreatingCheckoutSession}
+            className={styles.button}
+            onClick={handleBuyProduct}
+          >
+            Comprar agora
+          </button>
+        </div>
+      </main>
+    </>
   )
 }
 

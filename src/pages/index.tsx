@@ -8,6 +8,7 @@ import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
+import Head from 'next/head'
 
 interface Products {
   products: {
@@ -27,31 +28,36 @@ export default function Home({ products }: Products) {
   })
 
   return (
-    <main className={`${styles.homeContainer} keen-slider`} ref={sliderRef}>
-      {products.map((product) => {
-        return (
-          <Link
-            prefetch={false}
-            key={product.id}
-            href={`/product/${product.id}`}
-            className={`${styles.product} keen-slider__slide`}
-          >
-            <Image
-              src={product.imageUrl}
-              width={520}
-              height={480}
-              alt=""
-              className={styles.image}
-            />
+    <>
+      <Head>
+        <title>Home | Ignite Shop</title>
+      </Head>
+      <main className={`${styles.homeContainer} keen-slider`} ref={sliderRef}>
+        {products.map((product) => {
+          return (
+            <Link
+              prefetch={false}
+              key={product.id}
+              href={`/product/${product.id}`}
+              className={`${styles.product} keen-slider__slide`}
+            >
+              <Image
+                src={product.imageUrl}
+                width={520}
+                height={480}
+                alt=""
+                className={styles.image}
+              />
 
-            <footer className={styles.footer}>
-              <strong className={styles.strong}>{product.name}</strong>
-              <span className={styles.span}>{product.price}</span>
-            </footer>
-          </Link>
-        )
-      })}
-    </main>
+              <footer className={styles.footer}>
+                <strong className={styles.strong}>{product.name}</strong>
+                <span className={styles.span}>{product.price}</span>
+              </footer>
+            </Link>
+          )
+        })}
+      </main>
+    </>
   )
 }
 
