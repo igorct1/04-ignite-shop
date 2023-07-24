@@ -1,11 +1,11 @@
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 import { vars } from '../global.css'
 
 export const successContainer = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center',
+
   margin: '0 auto',
   height: 656,
 })
@@ -36,16 +36,13 @@ export const back = style({
   },
 })
 
-export const imageContainer = style({
+export const imageCard = style({
   width: '100%',
   background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
-  maxWidth: 130,
+  maxWidth: 145,
   height: 145,
-  borderRadius: 8,
+  borderRadius: 9999,
   padding: '0.25rem',
-
-  marginTop: '4rem',
-
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -53,4 +50,15 @@ export const imageContainer = style({
 
 export const image = style({
   objectFit: 'cover',
+})
+
+globalStyle(`${imageCard} + div`, {
+  marginLeft: '-70px',
+})
+
+export const imagesContainer = style({
+  display: 'flex',
+  padding: '6.5rem 0rem 3rem 0rem',
+  justifyContent: 'center',
+  alignItems: 'center',
 })

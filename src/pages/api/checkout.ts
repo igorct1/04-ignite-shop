@@ -1,3 +1,4 @@
+import { Product } from '@/contexts/CartContext'
 import { stripe } from '@/lib/stripe'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -5,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { priceId } = req.body
+  const { products } = req.body as { products: Product[] }
 
   //   enviar mensagem caso o method seja diferente de post
   if (req.method !== 'POST') {
@@ -13,7 +14,7 @@ export default async function handler(
   }
 
   //   enviar mensagem caso a rota seja chamada sem o priceId
-  if (!priceId) {
+  if (!products) {
     return res.status(400).json({ error: 'Price not found' })
   }
 
@@ -24,12 +25,11 @@ export default async function handler(
     success_url: successUrl,
     cancel_url: cancelUrl,
     mode: 'payment',
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1,
-      },
-    ],
+
+    line_items: products.map((product) => ({
+      price: product.defaultPriceId,
+      quantity: 1,
+    })),
   })
 
   return res.status(201).json({

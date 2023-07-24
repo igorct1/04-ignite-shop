@@ -1,6 +1,6 @@
 import * as styles from '@/styles/pages/home.css'
 import Image from 'next/image'
-
+import { Handbag } from 'phosphor-react'
 import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 
@@ -9,23 +9,49 @@ import Stripe from 'stripe'
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import Head from 'next/head'
+import { useContext } from 'react'
+import { CartContext, Product } from '@/contexts/CartContext'
 
-interface Products {
+export interface IProducts {
   products: {
     id: string
     name: string
     imageUrl: string
-    price: number
+    price: string
+    defaultPriceId: string
+    description: string
   }[]
 }
 
-export default function Home({ products }: Products) {
-  const [sliderRef] = useKeenSlider({
-    slides: {
-      perView: 3,
-      spacing: 48,
-    },
+export default function Home({ products }: IProducts) {
+  const { addProductToCart, productAlreadyExists } = useContext(CartContext)
+
+  const [sliderRef] = useKeenSlider<HTMLDivElement>({
+    mode: 'snap',
+    slides: () => [
+      {
+        size: 0.35,
+        spacing: 0.06,
+      },
+      {
+        size: 0.35,
+        spacing: 0.06,
+      },
+      {
+        size: 0.35,
+        spacing: 0.06,
+      },
+      {
+        size: 0.35,
+        spacing: 0.06,
+      },
+    ],
   })
+
+  function handleProductToCart(e, product: Product) {
+    e.preventDefault()
+    addProductToCart(product)
+  }
 
   return (
     <>
@@ -50,8 +76,17 @@ export default function Home({ products }: Products) {
               />
 
               <footer className={styles.footer}>
-                <strong className={styles.strong}>{product.name}</strong>
-                <span className={styles.span}>{product.price}</span>
+                <div className={styles.footerProductInfo}>
+                  <strong className={styles.strong}>{product.name}</strong>
+                  <span className={styles.span}>{product.price}</span>
+                </div>
+                <button
+                  className={styles.footerProductCartButton}
+                  onClick={(e) => handleProductToCart(e, product)}
+                  disabled={productAlreadyExists(product)}
+                >
+                  <Handbag size={32} />
+                </button>
               </footer>
             </Link>
           )
@@ -77,6 +112,8 @@ export const getStaticProps: GetStaticProps = async () => {
         style: 'currency',
         currency: 'BRL',
       }).format(price.unit_amount / 100),
+      defaultPriceId: price.id,
+      description: product.description,
     }
   })
   return {

@@ -4,37 +4,35 @@ import Stripe from 'stripe'
 import Image from 'next/image'
 
 import * as styles from '../../styles/pages/product.css'
-import axios from 'axios'
-import { useState } from 'react'
+import { useContext } from 'react'
 import Head from 'next/head'
+import { CartContext, Product } from '@/contexts/CartContext'
 
 interface ProductProps {
   product: {
     id: string
     name: string
     imageUrl: string
-    price: number
+    price: string
     description: string
     defaultPriceId: string
   }
 }
 
 export default function Product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false)
-  async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true)
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId,
-      })
+  const { cart, addProductToCart, removeProductFromCart } =
+    useContext(CartContext)
 
-      const { checkoutUrl } = response.data
+  const isProductAlreadyInCart = cart.findIndex(
+    (cartItem) => cartItem.id === product.id,
+  )
 
-      window.location.href = checkoutUrl
-    } catch (err) {
-      setIsCreatingCheckoutSession(false)
-    }
+  function handleAddProductToCart(product: Product) {
+    addProductToCart(product)
+  }
+
+  function handleRemoveProductFromCart(product: Product) {
+    removeProductFromCart(product)
   }
 
   return (
@@ -52,13 +50,21 @@ export default function Product({ product }: ProductProps) {
 
           <p className={styles.paragraph}>{product.description}</p>
 
-          <button
-            disabled={isCreatingCheckoutSession}
-            className={styles.button}
-            onClick={handleBuyProduct}
-          >
-            Comprar agora
-          </button>
+          {isProductAlreadyInCart >= 0 ? (
+            <button
+              className={styles.button}
+              onClick={() => handleRemoveProductFromCart(product)}
+            >
+              Remover da sacola
+            </button>
+          ) : (
+            <button
+              className={styles.button}
+              onClick={() => handleAddProductToCart(product)}
+            >
+              Adicionar na sacola
+            </button>
+          )}
         </div>
       </main>
     </>

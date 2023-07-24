@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import * as styles from '../../styles/pages/success.css'
+
 import { GetServerSideProps } from 'next'
 import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
@@ -8,13 +9,13 @@ import Head from 'next/head'
 
 interface SuccessProps {
   customerName: string
-  product: {
+  products: {
     name: string
     imageUrl: string
-  }
+  }[]
 }
 
-export default function Success({ customerName, product }: SuccessProps) {
+export default function Success({ customerName, products }: SuccessProps) {
   return (
     <>
       <Head>
@@ -23,15 +24,22 @@ export default function Success({ customerName, product }: SuccessProps) {
         <meta name="robots" content="noindex" />
       </Head>
       <main className={styles.successContainer}>
+        <section className={styles.imagesContainer}>
+          {products.map((product) => {
+            return (
+              <div className={styles.imageCard} key={product.name}>
+                <Image src={product.imageUrl} width={140} height={140} alt="" />
+              </div>
+            )
+          })}
+        </section>
+
         <h1 className={styles.title}>Compra efetuada!</h1>
 
-        <div className={styles.imageContainer}>
-          <Image src={product.imageUrl} width={140} height={140} alt="" />
-        </div>
-
         <p className={styles.paragraph}>
-          Uhuuul!<strong> {customerName}</strong>, sua camiseta
-          <strong> {product.name}</strong> já está a caminho da sua casa
+          Uhuuul!<strong> {customerName}</strong>, sua compra de{' '}
+          <strong>{products.length} camisetas</strong> já está a caminho da sua
+          casa
         </p>
 
         <Link href="/" className={styles.back}>
@@ -60,16 +68,20 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   })
 
   const customerName = session.customer_details.name
-  const product = session.line_items.data[0].price.product as Stripe.Product
 
-  console.log(product.name)
+  const products = session.line_items.data.map((item) => {
+    const product = item.price.product as Stripe.Product
+
+    return {
+      name: product.name,
+      imageUrl: product.images[0],
+    }
+  })
+
   return {
     props: {
       customerName,
-      product: {
-        name: product.name,
-        imageUrl: product.images[0],
-      },
+      products,
     },
   }
 }

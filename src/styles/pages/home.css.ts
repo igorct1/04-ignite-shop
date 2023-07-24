@@ -15,7 +15,6 @@ export const product = style({
   borderRadius: 8,
   padding: '0.25rem',
   cursor: 'pointer',
-
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
@@ -48,6 +47,34 @@ export const footer = style({
   transition: 'all 0.2s ease-in-out',
 
   backgroundColor: 'rgba(0,0,0,0.6)',
+})
+
+export const footerProductInfo = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.5rem',
+})
+
+export const footerProductCartButton = style({
+  border: 0,
+  background: vars.colors.green500,
+  padding: '0.75rem',
+  borderRadius: 6,
+  cursor: 'pointer',
+
+  selectors: {
+    '&:not(:disabled):hover': {
+      background: vars.colors.green300,
+    },
+    '&:disabled': {
+      opacity: 0.7,
+      cursor: 'not-allowed',
+    },
+  },
+})
+
+globalStyle(`${footerProductCartButton} svg`, {
+  color: vars.colors.gray100,
 })
 
 export const strong = style({
